@@ -17,10 +17,30 @@ public class TowerController : MonoBehaviour
 
     void Start()
     {
+        if(targetTransform == null)
+        {
+            targetTransform = GameObject.Find("StandardEnemy").transform;
+        }
+
         attacking = true;
+    }
+
+    private void OnEnable()
+    {
+        EventBus<TowerPlaced>.OnEvent += OnPlaced;
+    }
+
+    private void OnDisable()
+    {
+        EventBus<TowerPlaced>.OnEvent -= OnPlaced;
+    }
+
+    void OnPlaced(TowerPlaced towerPlaced)
+    {
         attacker.SetTarget(targetTransform);
-        attacker.SetTower(this.transform);
+        attacker.SetTower(this.transform, this.gameObject.name);
         StartCoroutine(attackCoroutine());
+        EventBus<TowerPlaced>.OnEvent -= OnPlaced;
     }
 
     private IEnumerator attackCoroutine()
@@ -29,8 +49,6 @@ public class TowerController : MonoBehaviour
         {
             yield return new WaitForSeconds(attackInterval);
             attacker.Attack();
-            Debug.Log(transform.position);
-            Debug.Log(attacker.transform.position);
         }
     }
 }

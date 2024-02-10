@@ -15,7 +15,7 @@ public abstract class AbstractAttacker : MonoBehaviour
         targetTransform = pTargetTransform;
     }
 
-    public void SetTower(Transform pTowerTransform)
+    public void SetTower(Transform pTowerTransform, string name)
     {
         transform.position = pTowerTransform.position;
     }
