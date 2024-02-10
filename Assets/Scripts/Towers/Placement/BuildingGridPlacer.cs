@@ -1,21 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using TMPro;
 
-
-//Places the tower and invokes related events
-public class BuildingPlacer : MonoBehaviour
+public class BuildingGridPlacer : BuildingPlacer
 {
-    //Prefabs for the tower
-    protected GameObject towerPrefab;
-    protected GameObject towerVisual;
-
-    private void Awake()
-    {
-        towerPrefab = null;
-    }
+    public int cellSize = 16;
 
     private void Update()
     {
@@ -34,8 +23,11 @@ public class BuildingPlacer : MonoBehaviour
                 towerVisual.SetActive(true);
             }
 
-            towerVisual.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-        
+            Vector2 mousePosition = Input.mousePosition;
+            Vector3 mousePositionOnScreen = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 10));
+            Vector2 positionInGrid = ClampToNearest(mousePositionOnScreen, cellSize);
+            towerVisual.transform.position = positionInGrid;
+
             if (Input.GetMouseButtonDown(0))
             {
                 BuildManager m = towerVisual.GetComponent<BuildManager>();
@@ -61,24 +53,15 @@ public class BuildingPlacer : MonoBehaviour
         }
     }
 
-    public void SetTowerPrefab(GameObject prefab)
+    Vector2 ClampToNearest(Vector2 pos, int threshold)
     {
-        towerPrefab = prefab;
-        PrepareTower();
-    }
+        float t = 1f / threshold;
+        Vector2 vector = ((Vector2)Vector2Int.FloorToInt(pos * t)) / t;
 
-    protected virtual void PrepareTower()
-    {
-        if (towerVisual != null)
-        {
-            Destroy(towerVisual);
-        }
-
-        towerVisual = Instantiate(towerPrefab);
-        towerVisual.SetActive(false);
-
-        BuildManager m = towerVisual.GetComponent<BuildManager>();
-        m.isFixed = false;
-        m.SetPlacementMode(PlacementMode.Valid);
+        float cetner = threshold * 0.5f;
+        vector.x += cetner;
+        vector.y += cetner;
+        Debug.Log(vector);
+        return vector;
     }
 }
