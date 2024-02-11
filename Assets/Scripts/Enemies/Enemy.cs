@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StandardEnemy : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     //Enemy stats
     [SerializeField] int health = 30;
@@ -10,17 +10,29 @@ public class StandardEnemy : MonoBehaviour
     [SerializeField] int money = 5;
 
     //Waypoint for following the path
-    [SerializeField] Transform[] waypoints;
+    Transform[] waypoints;
     int waypointIndex = 0;
-
-    private void Start()
-    {
-        transform.position = waypoints[waypointIndex].transform.position;
-    }
 
     private void Update()
     {
-        Move();
+        if (waypoints != null)
+        {
+            Move();
+        }
+    }
+
+    public void SetPath(GameObject path)
+    {
+        Transform[] childTransforms = path.GetComponentsInChildren<Transform>();
+
+        waypoints = new Transform[childTransforms.Length - 1];
+
+        for (int i = 1; i < childTransforms.Length; i++)
+        {
+            waypoints[i - 1] = childTransforms[i];
+        }
+
+        transform.position = waypoints[waypointIndex].transform.position;
     }
 
     //Moves towards next waypoint

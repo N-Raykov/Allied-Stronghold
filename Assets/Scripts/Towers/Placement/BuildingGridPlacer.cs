@@ -61,7 +61,6 @@ public class BuildingGridPlacer : BuildingPlacer
         float cetner = threshold * 0.5f;
         vector.x += cetner;
         vector.y += cetner;
-        Debug.Log(vector);
         return vector;
     }
 }

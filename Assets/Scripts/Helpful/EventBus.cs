@@ -1,5 +1,5 @@
 using System;
-
+using UnityEngine;
 
 //This is an event bus
 public class EventBus<T> where T : Event
@@ -16,4 +16,16 @@ public class EventBus<T> where T : Event
 public class TowerPlaced : Event
 { 
     
+}
+
+public class EnemySpawned : Event
+{
+    public Enemy EnemyType { get; private set; }
+    public GameObject Path { get; private set; }
+
+    public EnemySpawned(Enemy enemyType, GameObject path)
+    {
+        EnemyType = enemyType;
+        Path = path;
+    }
 }
