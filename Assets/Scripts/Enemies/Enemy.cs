@@ -54,8 +54,14 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            EventBus<DamageTaken>.Publish(new DamageTaken());
         }
+    }
+
+    void Die()
+    {
+        EventBus<MoneyChanged>.Publish(new MoneyChanged(money));
+        Destroy(this.gameObject);
     }
 }
 

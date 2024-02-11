@@ -12,6 +12,9 @@ public class TowerController : MonoBehaviour
     [SerializeField] Transform targetTransform;
 
     [SerializeField] float attackInterval = 1f;
+    [SerializeField] int damage = 10;
+    [SerializeField] float range = 20f;
+    [SerializeField] int cost = 10;
 
     bool attacking = false;
 
@@ -35,12 +38,13 @@ public class TowerController : MonoBehaviour
         EventBus<TowerPlaced>.OnEvent -= OnPlaced;
     }
 
-    void OnPlaced(TowerPlaced towerPlaced)
+    void OnPlaced(TowerPlaced eventData)
     {
         attacker.SetTarget(targetTransform);
         attacker.SetTower(this.transform, this.gameObject.name);
         StartCoroutine(attackCoroutine());
         EventBus<TowerPlaced>.OnEvent -= OnPlaced;
+        EventBus<MoneyChanged>.Publish(new MoneyChanged(-cost));
     }
 
     private IEnumerator attackCoroutine()

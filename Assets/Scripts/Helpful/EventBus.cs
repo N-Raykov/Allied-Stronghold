@@ -29,3 +29,18 @@ public class EnemySpawned : Event
         Path = path;
     }
 }
+
+public class DamageTaken : Event
+{
+    
+}
+
+public class MoneyChanged : Event
+{
+    public int Amount { get; private set; }
+
+    public MoneyChanged(int amount)
+    {
+        Amount = amount;
+    }
+}
